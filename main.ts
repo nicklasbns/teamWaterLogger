@@ -9,6 +9,7 @@ const logFile = "./messages.log";
 const graphFile = "./graph.log";
 const maxMessagesToShow = 5;
 
+let lastReconnectTime = 0;
 let totalMessages = 0;
 const messageBuffer: string[] = [];
 
@@ -115,7 +116,8 @@ function connectWebSocket() {
     setTimeout(() => {
       term.yellow("Reconnecting to WebSocket...\n");
       connectWebSocket(); // Attempt to reconnect
-    }, 10);
+    }, Date.now() - lastReconnectTime < 6000 ? 5000 : 10);
+    lastReconnectTime = Date.now();
   };
 }
 
